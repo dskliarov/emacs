@@ -56,7 +56,6 @@
 (setq use-file-dialog nil)
 
 ;; Be a bit more Windows-friendly
-(require 'pc-select) 			;; Make copy mouse selection work in the usual Mac/Windows way
 (transient-mark-mode t) 		;; highlight text selection
 (delete-selection-mode t) 		;; delete seleted text when typing
 (cua-mode t) 				;; windows style keybind C-x, C-v, cut paste
@@ -73,12 +72,29 @@
 (global-font-lock-mode t) ; turn on syntax highlight
 (global-set-key [C-f4] (lambda () (interactive) (kill-buffer nil)))
 
+;; Setup auto highlight symbol
+(require 'auto-highlight-symbol-config)
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+
+(add-hook 'after-init-hook 'my-after-init-hook)
+(defun my-after-init-hook ()
+  (require 'edts-start))
 
 ;; Set up buffer switching
 (require 'cycle-buffer)
 (global-set-key [C-S-tab] 'cycle-buffer-backward)
 (global-set-key [C-tab] 'cycle-buffer)
 
+(require 'package)
+;; Add the original Emacs Lisp Package Archive
+(add-to-list 'package-archives
+             '("elpa" . "http://tromey.com/elpa/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
+;; Add the user-contributed repository
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 ;; ido provides a very nice auto-complete for finding files (type C-x f)
 ;; Learn more here: http://www.emacswiki.org/emacs/InteractivelyDoThings
@@ -106,6 +122,10 @@
   (setq default-directory saved-default-directory))
 (global-set-key "\C-x\C-f" 'find-file-save-default-directory)
 
+(add-hook 'term-exec-hook
+          (function
+           (lambda ()
+             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))))
 
 (require 'sr-speedbar)
 (setq speedbar-show-unknown-files t)
@@ -126,5 +146,7 @@
 
 (global-set-key (kbd "C-o") 'speedbar-open-and-select)
 
+(global-linum-mode t)
 
 (provide 'my-config)
+
