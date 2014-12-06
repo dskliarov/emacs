@@ -36,7 +36,7 @@
 (setq theme-current my-color-themes)
 (setq color-theme-is-global nil) ; Initialization
 (my-theme-set-default)
-(global-set-key [f12] 'my-theme-cycle)	
+(global-set-key "\C-t" 'my-theme-cycle)	
 
 
 ;; 	The value is in 1/10pt, so 100 will give you 10pt, etc.
@@ -67,9 +67,6 @@
 			 ;;:family "Ubuntu Mono"
 			 )))))
 
-(if (or (eq system-type 'windows-nt)
-	    (eq system-type 'ms-dos))
-	(set-face-attribute 'default nil :font "Consolas") ;; Windows
-      (set-face-attribute 'default nil :font "Ubuntu Mono")) ;; Linux
+;;(set-face-attribute 'default nil :font "Ubuntu Mono")) ;; Linux
 
 (provide 'theme)

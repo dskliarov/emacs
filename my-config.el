@@ -1,6 +1,5 @@
 ;; Hook up all the major and minor modes we care about
 (require 'emacs-modes)
-
 ;; Explorer more popular emacs options here: http://www.emacswiki.org/emacs/PopularOptions
 
 ;; Make it look good
@@ -56,15 +55,15 @@
 (setq use-file-dialog nil)
 
 ;; Be a bit more Windows-friendly
-(transient-mark-mode t) 		;; highlight text selection
-(delete-selection-mode t) 		;; delete seleted text when typing
+;;(transient-mark-mode t) 		;; highlight text selection
+;;(delete-selection-mode t) 		;; delete seleted text when typing
 (cua-mode t) 				;; windows style keybind C-x, C-v, cut paste
 (setq cua-auto-tabify-rectangles nil) 	;; Don't tabify after rectangle commands
 (setq cua-keep-region-after-copy t) 	;; Selection remains after C-c
 (transient-mark-mode 1)             	;; No region when it is not highlighted
-(global-set-key "\C-a" 'mark-whole-buffer)	;; Select All
-(global-set-key "\C-f" 'isearch-forward)
-(define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+;(global-set-key "\C-a" 'mark-whole-buffer)	;; Select All
+;(global-set-key "\C-f" 'isearch-forward)
+;(define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
 (global-set-key "\C-w" 'kill-this-buffer)
 
 ;; Visual Studio 
@@ -82,19 +81,28 @@
   (require 'edts-start))
 
 ;; Set up buffer switching
-(require 'cycle-buffer)
-(global-set-key [C-S-tab] 'cycle-buffer-backward)
-(global-set-key [C-tab] 'cycle-buffer)
+;;   (autoload 'cycle-buffer "cycle-buffer" "Cycle forward." t)
+;;   (autoload 'cycle-buffer-backward "cycle-buffer" "Cycle backward." t)
+;;   (autoload 'cycle-buffer-permissive "cycle-buffer" "Cycle forward allowing *buffers*." t)
+;;   (autoload 'cycle-buffer-backward-permissive "cycle-buffer" "Cycle backward allowing *buffers*." t)
+;;   (autoload 'cycle-buffer-toggle-interesting "cycle-buffer" "Toggle if this buffer will be considered." t)
+;;   (global-set-key [(f9)]        'cycle-buffer-backward)
+;;   (global-set-key [(f10)]       'cycle-buffer)
+;;   (global-set-key [(shift f9)]  'cycle-buffer-backward-permissive)
+;   (global-set-key [(shift f10)] 'cycle-buffer-permissive)
 
 (require 'package)
 ;; Add the original Emacs Lisp Package Archive
 (add-to-list 'package-archives
              '("elpa" . "http://tromey.com/elpa/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/"))
+;(add-to-list 'package-archives
+;             '("melpa" . "http://melpa.milkbox.net/packages/"))
 ;; Add the user-contributed repository
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(package-initialize)
 
 ;; ido provides a very nice auto-complete for finding files (type C-x f)
 ;; Learn more here: http://www.emacswiki.org/emacs/InteractivelyDoThings
@@ -110,8 +118,8 @@
 (setq text-mode-hook (quote (turn-on-auto-fill text-mode-hook-identify)))
 
 ;; Get rid of clutter
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;;(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
 
@@ -120,7 +128,7 @@
   (setq saved-default-directory default-directory)
   (ido-find-file)
   (setq default-directory saved-default-directory))
-(global-set-key "\C-x\C-f" 'find-file-save-default-directory)
+(global-set-key "\C-x \C-f" 'find-file-save-default-directory)
 
 (add-hook 'term-exec-hook
           (function
@@ -150,3 +158,30 @@
 
 (provide 'my-config)
 
+;; (global-set-key "\C-c \C-c" 'comment-region)
+
+;; (global-set-key "\C-c \C-u" 'uncomment-region)
+
+(global-set-key "\C-x \C-g" 'find-grep-dired)
+
+(setq default-directory "~/erlang_projects")
+
+(setq user-full-name "Dmitri Skliarov")
+(setq user-login-name "dskliarov")
+(setq user-mail-address "DmitriSkliarov@QuickenLoans.com")
+
+;; {setq dired-recursive-deletes 'always}
+
+(defun switch-buffers-between-frames ()
+  "switch-buffers-between-frames switches the buffers between the two last frames"
+  (interactive)
+  (let ((this-frame-buffer nil)
+	(other-frame-buffer nil))
+    (setq this-frame-buffer (car (frame-parameter nil 'buffer-list)))
+    (other-frame 1)
+    (setq other-frame-buffer (car (frame-parameter nil 'buffer-list)))
+    (switch-to-buffer this-frame-buffer)
+    (other-frame 1)
+    (switch-to-buffer other-frame-buffer)))
+
+(global-set-key (kbd "C-x M-o") 'switch-buffers-between-frames)

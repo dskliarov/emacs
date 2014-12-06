@@ -49,4 +49,11 @@
     (fset 'erlang-flymake-get-include-dirs-function 'ebm-get-deps-include-dirs)
 
 
+(defun my-inferior-erlang-compile ()
+  (interactive)
+  (let ((default-directory (my-find-rebar-root)))
+    (compile "rebar compile")))
+
+(defun my-erlang-mode-hook () (local-set-key [f9] 'my-inferior-erlang-compile)) (add-hook 'erlang-mode-hook 'my-erlang-mode-hook)
+
 (provide 'rebar-config)
